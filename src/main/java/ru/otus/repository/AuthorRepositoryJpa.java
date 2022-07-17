@@ -39,25 +39,20 @@ public class AuthorRepositoryJpa implements AuthorRepository {
 
     @Override
     public List<Author> findAll() {
-        TypedQuery<Author> query = em.createQuery("select s from Author s", Author.class);
+        TypedQuery<Author> query = em.createQuery("select s from Author s ", Author.class);
         return query.getResultList();
     }
 
     @Override
     public List<Author> findByName(String name) {
-        TypedQuery<Author> query = em.createQuery("select s " +
-                        "from Author s " +
-                        "where s.authorName = :name",
-                Author.class);
+        TypedQuery<Author> query = em.createQuery("select s from Author s where s.authorName = :name", Author.class);
         query.setParameter("name", name);
         return query.getResultList();
     }
 
     @Override
     public void updateNameById(long id, String name) {
-        Query query = em.createQuery("update Author s " +
-                "set s.authorName = :name " +
-                "where s.id = :id");
+        Query query = em.createQuery("update Author s set s.authorName = :name where s.id = :id");
         query.setParameter("id", id);
         query.setParameter("name", name);
         query.executeUpdate();
@@ -65,9 +60,7 @@ public class AuthorRepositoryJpa implements AuthorRepository {
 
     @Override
     public void deleteById(long id) {
-        Query query = em.createQuery("delete " +
-                "from Author s " +
-                "where s.id = :id");
+        Query query = em.createQuery("delete from Author s where s.id = :id");
         query.setParameter("id", id);
         query.executeUpdate();
     }
