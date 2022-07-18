@@ -23,5 +23,5 @@ DROP TABLE IF EXISTS Comment;
 CREATE TABLE Comment(
     ID bigserial PRIMARY KEY,
     Comment_Text VARCHAR(255),
-    Book_Id BIGINT NOT NULL references Book (id)
+    Book_Id BIGINT NOT NULL references Book (id) on delete cascade
 );

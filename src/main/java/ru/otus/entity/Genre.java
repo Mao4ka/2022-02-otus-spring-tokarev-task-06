@@ -32,7 +32,4 @@ public class Genre {
     @Column(name = "Genre_name")
     private String genreName;
 
-    @OneToMany(targetEntity = Book.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "Genre_id")
-    private List<Book> books;
 }

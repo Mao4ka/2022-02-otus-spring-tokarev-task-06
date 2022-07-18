@@ -1,6 +1,5 @@
 package ru.otus.repository;
 
-import lombok.val;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +14,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@DisplayName("Репозиторий на основе Jpa должен ")
+@DisplayName("Репозиторий Author на основе Jpa должен ")
 @DataJpaTest
 @Import(AuthorRepositoryJpa.class)
 class AuthorRepositoryJpaTest {
@@ -29,7 +28,7 @@ class AuthorRepositoryJpaTest {
     @Autowired
     private TestEntityManager em;
 
-    @DisplayName("Находить все записи")
+    @DisplayName("находить все записи")
     @Test
     void findAll() {
         List<Author> allAuthors = repositoryJpa.findAll();
@@ -48,7 +47,6 @@ class AuthorRepositoryJpaTest {
     @Test
     void saveWhenNotExists() {
         Author author = new Author();
-        //author.setId(6L);
         author.setAuthorName(NEW_AUTHOR_NAME);
 
         repositoryJpa.save(author);
@@ -87,28 +85,31 @@ class AuthorRepositoryJpaTest {
     @Test
     void updateNameById() {
         Author authorBefore = em.find(Author.class, 1L);
-        //assertEquals("author_unknown", authorBefore.getAuthorName());
         em.detach(authorBefore);
 
         repositoryJpa.updateNameById(1, NEW_AUTHOR_NAME);
 
         Author authorAfter = em.find(Author.class, 1L);
-        //assertEquals(NEW_AUTHOR_NAME, authorAfter.getAuthorName());
 
         assertThat(authorAfter.getAuthorName()).isNotEqualTo(authorBefore.getAuthorName()).isEqualTo(NEW_AUTHOR_NAME);
     }
 
+    /**
+     * мысль: в репо - топорное удаление (без учета зависимостей),
+     * а вот в будущем сервисе нужно было бы сперва реализовать проверку перед тем как дергать метод из репозитория,
+     * в бизнесс-классе уже юзать метод из сервиса
+     */
     @DisplayName("удалять запись по ID")
     @Test
     void deleteById() {
-        val firstStudent = em.find(Author.class, 6L);
-        assertThat(firstStudent).isNotNull();
-        em.detach(firstStudent);
+        Author firstAuthor = em.find(Author.class, 6L);
+        assertThat(firstAuthor).isNotNull();
+        em.detach(firstAuthor);
 
         repositoryJpa.deleteById(6L);
-        val deletedStudent = em.find(Author.class, 6L);
+        Author deletedAuthor = em.find(Author.class, 6L);
 
-        assertThat(deletedStudent).isNull();
+        assertThat(deletedAuthor).isNull();
 
         List<Author> allAuthors = repositoryJpa.findAll();
         assertEquals(EXPECTED_NUMBER_OF_AUTHORS - 1, allAuthors.size());
